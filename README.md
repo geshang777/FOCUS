@@ -18,7 +18,8 @@ We introduce **FOCUS**, **F**oreground **O**bje**C**ts **U**niversal **S**egment
 
 ## News
 
-
+* [2025.07.06] [FOCUS(DINOv2-L)](https://drive.google.com/drive/folders/1QIKz7Z3ih7RhTra2iS0OoO6dbgGpr0Rr) checkpoints and [prediction results](https://drive.google.com/drive/folders/1Wz7x379hBSgtereYgw2Y8LMBiUV6g0J9) are now opensource. We've also updated the training scripts to support DINOv2-L as the backbone, you can now train FOCUS using one single NVIDIA A6000 GPU. Hope you enjoy it!
+* [2025.06.27] Our new paper [Seg-R1: Segmentation Can Be Surprisingly Simple with Reinforcement Learning](https://arxiv.org/pdf/2506.22624) is released. In this paper, we explore how to endow large language models (LLMs) with open-world segmentation capabilities using purely reinforcement learning, relying solely on foreground segmentation data.
 * [2025.01.03] [FOCUS(DINOv2-G)](https://drive.google.com/drive/folders/1IcyZnqc4vcsvSUcKb2llYGPt3ClFGjPl) checkpoints and [prediction results](https://drive.google.com/drive/folders/1Wz7x379hBSgtereYgw2Y8LMBiUV6g0J9) are now opensource. You can follow the guidelines [here](#quick-start) to quickly leverage the state-of-the-art performance of our model. Hope you enjoy it!
 * [2024.12.16] Our code is released! Feel free to contact us if you have any questions!
 * [2024.12.10] Our paper has been accepted by AAAI2025!🔥
@@ -54,7 +55,7 @@ cd focus/modeling/pixel_decoder/ops && sh make.sh && cd ../../../../
 ### Quick Start
 
 
-We provide an inference demo here if you want to try out the our model. You should download the weights from our [Model Zoo](https://drive.google.com/drive/folders/1IcyZnqc4vcsvSUcKb2llYGPt3ClFGjPl) first and run the following command. Make sure that you use the config file conrresbonding to the download weights.
+We provide an inference demo here if you want to try out the our model. You should download the weights from our [MODEL_ZOO.md](MODEL_ZOO.md) first and run the following command. Make sure that you use the config file that matches the downloaded weights.
 
 ```bash
 python demo/demo.py --config-file path/to/your/config \
@@ -131,6 +132,9 @@ download pre-trained DINOv2 weights by:
 ```bash
 #dinov2-g
 wget -P ./ckpt https://dl.fbaipublicfiles.com/dinov2/dinov2_vitg14/dinov2_vitg14_reg4_pretrain.pth
+
+#dinov2-l
+wget -P ./ckpt https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth
 ```
 
 and run the following line to convert DINOv2 weights into detectron2 format while prepare ResNet weights for edge enhancer
@@ -138,23 +142,27 @@ and run the following line to convert DINOv2 weights into detectron2 format whil
 ```bash
 #dinov2-g
 python utils/convert_dinov2.py ./ckpt/dinov2_vitg14_reg4_pretrain.pth ./ckpt/dinov2_vitg14_pretrain_updated.pkl
+
+#dinov2-l
+python utils/convert_dinov2.py ./ckpt/dinov2_vitl14_reg4_pretrain.pth ./ckpt/dinov2_vitl14_pretrain_updated.pkl
+
 ```
 
 
 ## Training
 ```bash
 python train_net.py \
---config-file path/to/your/config \
---num-gpus NUM_GPUS
+  --config-file path/to/your/config \
+  --num-gpus NUM_GPUS
 ```
 
 ## Evaluation
 
 ```bash
 python train_net.py --eval-only \
---config-file path/to/your/config \
---num-gpus NUM_GPUS \
-MODEL.WEIGHTS path/to/your/weights
+  --config-file path/to/your/config \
+  --num-gpus NUM_GPUS \
+  MODEL.WEIGHTS path/to/your/weights
 ```
 
 ## Citation
@@ -162,12 +170,11 @@ MODEL.WEIGHTS path/to/your/weights
 If you think our work is helpful, please star this repo and cite our paper!
 
 ```
-@inproceedings{
-you2025focus,
-title={{FOCUS}: Towards Universal Foreground Segmentation},
-author={You, Zuyao and Kong, Lingyu and Meng, Lingchen and Wu, Zuxuan},
-booktitle={AAAI},
-year={2025},
+@inproceedings{you2025focus,
+  title={{FOCUS}: Towards Universal Foreground Segmentation},
+  author={You, Zuyao and Kong, Lingyu and Meng, Lingchen and Wu, Zuxuan},
+  booktitle={AAAI},
+  year={2025},
 }
 ```
 

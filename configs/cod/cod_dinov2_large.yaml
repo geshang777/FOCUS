@@ -1,0 +1,145 @@
+MODEL:
+  META_ARCHITECTURE: "FOCUS"
+  BACKBONE:
+    NAME: "D2DINOV2"
+  DINOV2:
+    EMBED_DIM: 1024 #192
+    IN_PATCH_SIZE : 14 #4
+    NUM_HEADS: 16
+    CONV_INPLANE: 64
+    N_POINTS: 4
+    INIT_VALUES : 0.0
+    WITH_CFFN : True
+    CFFN_RATIO : 0.25
+    FFN_TYPE: "mlp"
+    DEPTH: 24
+
+    DEFORM_RATIO : 0.5 #1.0
+    ADD_VIT_FEATURE : True
+    PRETRAINED : None
+    USE_EXTRA_EXTRATOR : True
+    FREEZE_VIT : False
+    USE_CLS : True
+    WITH_CP : True
+
+    PRETRAIN_IMG_SIZE: 518 #384
+    DEFORM_NUM_HEADS: 16
+    INTERACTION_INDEXES: [[0, 5], [6, 11], [12, 17], [18, 23]]
+
+    # INTERACTION_INDEXES: [[0, 9], [10, 19], [20, 29], [30, 39]]
+  WEIGHTS: "./ckpt/dinov2_vitl14_pretrain_updated.pkl"
+  PIXEL_MEAN: [123.675, 116.280, 103.530]
+  PIXEL_STD: [58.395, 57.120, 57.375]
+  MASK_FORMER:
+    NUM_OBJECT_QUERIES: 2
+  SEM_SEG_HEAD:
+    NAME: "FOCUSHead"
+    IGNORE_VALUE: 255
+    NUM_CLASSES: 2
+    LOSS_WEIGHT: 1.0
+    CONVS_DIM: 256
+    MASK_DIM: 256
+    NORM: "GN"
+    # pixel decoder
+    PIXEL_DECODER_NAME: "MSDeformAttnPixelDecoder"
+    IN_FEATURES: ["res2", "res3", "res4", "res5"]
+    DEFORMABLE_TRANSFORMER_ENCODER_IN_FEATURES: ["res3", "res4", "res5"]
+    COMMON_STRIDE: 4
+    TRANSFORMER_ENC_LAYERS: 6
+  MASK_FORMER:
+    TRANSFORMER_DECODER_NAME: "MultiScaleMaskedTransformerDecoder"
+    TRANSFORMER_IN_FEATURE: "multi_scale_pixel_decoder"
+    DEEP_SUPERVISION: True
+    NO_OBJECT_WEIGHT: 0.1
+    CLASS_WEIGHT: 1.0
+    CLIP_WEIGHT: 1.0
+    MASK_WEIGHT: 5.0
+    DICE_WEIGHT: 5.0
+    COS_WEIGHT: 1.0
+    L2_WEIGHT: 1.0
+    BBOX_WEIGHT: 5.0
+    GIOU_WEIGHT: 2.0
+    HIDDEN_DIM: 256
+    NUM_OBJECT_QUERIES: 2
+    NHEADS: 8
+    DROPOUT: 0.0
+    DIM_FEEDFORWARD: 2048
+    ENC_LAYERS: 0
+    PRE_NORM: False
+    ENFORCE_INPUT_PROJ: False
+    SIZE_DIVISIBILITY: 32
+    DEC_LAYERS: 10  # 9 decoder layers, add one for the loss on learnable query
+    TRAIN_NUM_POINTS: 12544
+    OVERSAMPLE_RATIO: 3.0
+    IMPORTANCE_SAMPLE_RATIO: 0.75
+    TEST:
+      SEMANTIC_ON: True
+      INSTANCE_ON: True
+      PANOPTIC_ON: False
+      DETECTIONS_PER_IMAGE: 4
+      OVERLAP_THRESHOLD: 0.8
+      OBJECT_MASK_THRESHOLD: 0.8
+  CLIP_REFINER:
+    TEXT_TEMPLATES: "vild"
+    CLIP_MODEL_NAME: "ViT-B/16"
+    MASK_FILL: "mean"
+    MASK_EXPAND_RATIO: 1.0
+    MASK_THR: 0.5 # choose the foreground objects
+    MASK_MATTING: False # use soft background, default not used
+    MASK_PROMPT_DEPTH: 3
+    MASK_PROMPT_FWD: True # use mask prompt during forward
+    REGION_RESIZED: True # resize to the input of clip, e.g., 224
+    CLIP_ENSEMBLE: True # use ensemble of two classification branches
+    CLIP_ENSEMBLE_WEIGHT: 0.7
+    PROMPTS: ["It’s an image of salient objects without background.", "It’s an image of background with salient objects removed."]
+
+DATASETS:
+  TRAIN: ("cod10k_train","cod_train",)
+  TEST: ("nc4k","cod10k_val","cod_val","chameleon",)
+SOLVER:
+  IMS_PER_BATCH: 8
+  BASE_LR: 0.0001
+  MAX_ITER: 20000
+  WARMUP_FACTOR: 1.0
+  WARMUP_ITERS: 0
+  WEIGHT_DECAY: 0.05
+  OPTIMIZER: "ADAMW"
+  LR_SCHEDULER_NAME: "WarmupPolyLR"
+  BACKBONE_MULTIPLIER: 0.1
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "full_model"
+    CLIP_VALUE: 0.01
+    NORM_TYPE: 2.0
+  AMP:
+    ENABLED: True
+WANDB:
+    PROJECT : "FOCUS"
+    NAME : None
+    
+INPUT:
+  MIN_SIZE_TRAIN: !!python/object/apply:eval ["[int(x * 0.1 * 256) for x in range(5, 21)]"]
+  MIN_SIZE_TRAIN_SAMPLING: "choice"
+  MIN_SIZE_TEST: 512
+  MAX_SIZE_TRAIN: 2048
+  MAX_SIZE_TEST: 2048
+  CROP:
+    ENABLED: True
+    TYPE: "absolute"
+    SIZE: (640, 640)
+    SINGLE_CATEGORY_MAX_AREA: 1.0
+  COLOR_AUG_SSD: True
+  SIZE_DIVISIBILITY: 512  # used in dataset mapper
+  FORMAT: "RGB"
+  DATASET_MAPPER_NAME: "focus_dataset_mapper"
+TEST:
+  EVAL_PERIOD: 5000
+  AUG:
+    ENABLED: False
+    MIN_SIZES: [320, 480, 640, 800, 960, 1120]
+    MAX_SIZE: 4480
+    FLIP: True
+DATALOADER:
+  FILTER_EMPTY_ANNOTATIONS: True
+  NUM_WORKERS: 4
+VERSION: 2
