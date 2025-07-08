@@ -10,7 +10,7 @@
 ## Overview
 
 <p align="center">
-  <img src="assets/focus_framework.png" width="90%" height="90%">
+  <img src="assets/focus_framework.png" width="80%">
 </p>
 
 We introduce **FOCUS**, **F**oreground **O**bje**C**ts **U**niversal **S**egmentation framework that can handle multiple foreground tasks with one unified architecture. To achieve boundary-aware segmentation, we develop a multi-scale semantic network using the edge information of objects to enhance image features and propose a novel distillation method, integrating the contrastive learning strategy to refine the prediction mask in multi-modal feature space. Extensive experiments demonstrate that FOCUS achieves SoTA performance across five foreground segmentation tasks, including Salient Object Detection (SOD), Camouflaged Object Detection (COD), Shadow Detection (SD), Defocus Blur Detection (DBD), and Forgery Detection (FD).
