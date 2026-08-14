@@ -2,7 +2,7 @@
 
 # FOCUS: Towards Universal Foreground Segmentation
 <a href='https://arxiv.org/abs/2501.05238'><img src='https://img.shields.io/badge/ArXiv-Paper-red' /></a>
-<a href='https://drive.google.com/drive/folders/1IcyZnqc4vcsvSUcKb2llYGPt3ClFGjPl'><img src='https://img.shields.io/badge/Google_Drive-Model-orange' /></a>
+<a href='https://huggingface.co/collections/geshang/focus'><img src='https://img.shields.io/badge/HuggingFace-Model-yellow' /></a>
 <a href='https://geshang777.github.io/focus.github.io/'><img src='https://img.shields.io/badge/Project-Page-Green'></a>
 
 
@@ -18,9 +18,9 @@ We introduce **FOCUS**, **F**oreground **O**bje**C**ts **U**niversal **S**egment
 
 ## News
 
-* [2025.07.06] [FOCUS(DINOv2-L)](https://drive.google.com/drive/folders/1QIKz7Z3ih7RhTra2iS0OoO6dbgGpr0Rr) checkpoints and [prediction results](https://drive.google.com/drive/folders/1Wz7x379hBSgtereYgw2Y8LMBiUV6g0J9) are now opensource. We've also updated the training scripts to support DINOv2-L as the backbone, you can now train FOCUS using one single NVIDIA A6000 GPU. Hope you enjoy it!
+* [2025.07.06] [FOCUS(DINOv2-L)](https://huggingface.co/collections/geshang/focus) checkpoints and [prediction results](https://drive.google.com/drive/folders/1Wz7x379hBSgtereYgw2Y8LMBiUV6g0J9) are now opensource. We've also updated the training scripts to support DINOv2-L as the backbone, you can now train FOCUS using one single NVIDIA A6000 GPU. Hope you enjoy it!
 * [2025.06.27] Our new paper [Seg-R1: Segmentation Can Be Surprisingly Simple with Reinforcement Learning](https://arxiv.org/pdf/2506.22624) is released. In this paper, we explore how to endow large language models (LLMs) with open-world segmentation capabilities using purely reinforcement learning, relying solely on foreground segmentation data.
-* [2025.01.03] [FOCUS(DINOv2-G)](https://drive.google.com/drive/folders/1IcyZnqc4vcsvSUcKb2llYGPt3ClFGjPl) checkpoints and [prediction results](https://drive.google.com/drive/folders/1Wz7x379hBSgtereYgw2Y8LMBiUV6g0J9) are now opensource. You can follow the guidelines [here](#quick-start) to quickly leverage the state-of-the-art performance of our model. Hope you enjoy it!
+* [2025.01.03] [FOCUS(DINOv2-G)](https://huggingface.co/collections/geshang/focus) checkpoints and [prediction results](https://drive.google.com/drive/folders/1Wz7x379hBSgtereYgw2Y8LMBiUV6g0J9) are now opensource. You can follow the guidelines [here](#quick-start) to quickly leverage the state-of-the-art performance of our model. Hope you enjoy it!
 * [2024.12.16] Our code is released! Feel free to contact us if you have any questions!
 * [2024.12.10] Our paper has been accepted by AAAI2025!🔥
 
